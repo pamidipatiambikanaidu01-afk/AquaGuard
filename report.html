@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Water Issue - AquaGuard</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3fbff;
+      color: #173b4d;
+    }
+
+    /* HEADER */
+    .header {
+      height: 75px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 45px;
+      border-bottom: 1px solid #e3f2f7;
+      box-shadow: 0 4px 15px rgba(0, 100, 150, 0.06);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #087db5;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e4f8ff;
+      border-radius: 50%;
+    }
+
+    .back-btn {
+      border: none;
+      background: transparent;
+      color: #087db5;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* MAIN */
+    .container {
+      max-width: 850px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .page-title {
+      margin-bottom: 25px;
+    }
+
+    .page-title h1 {
+      font-size: 28px;
+      color: #123f55;
+      margin-bottom: 7px;
+    }
+
+    .page-title p {
+      color: #75909d;
+      font-size: 14px;
+    }
+
+    /* FORM CARD */
+    .form-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(0, 100, 150, 0.08);
+      border: 1px solid #e4f3f7;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: bold;
+      color: #16465d;
+      margin-bottom: 18px;
+    }
+
+    /* PHOTO UPLOAD */
+    .upload-box {
+      width: 100%;
+      min-height: 190px;
+      border: 2px dashed #9bd9ec;
+      border-radius: 15px;
+      background: #f5fcff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.25s;
+      overflow: hidden;
+    }
+
+    .upload-box:hover {
+      background: #eefaff;
+      border-color: #42afd1;
+    }
+
+    .upload-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .upload-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #24647b;
+    }
+
+    .upload-subtitle {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #8aa1ab;
+    }
+
+    #photoInput {
+      display: none;
+    }
+
+    #preview {
+      max-width: 100%;
+      max-height: 230px;
+      display: none;
+      object-fit: contain;
+    }
+
+    /* FORM */
+    .form-group {
+      margin-top: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #315b6d;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d5eaf1;
+      border-radius: 10px;
+      background: #fbfeff;
+      color: #294e5e;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #49afd0;
+      box-shadow: 0 0 0 3px rgba(73, 175, 208, 0.1);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    /* LOCATION */
+    .location-box {
+      display: flex;
+      gap: 10px;
+    }
+
+    .location-box input {
+      flex: 1;
+    }
+
+    .location-btn {
+      border: none;
+      padding: 0 18px;
+      border-radius: 10px;
+      background: #e2f7fd;
+      color: #087db5;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .location-btn:hover {
+      background: #d1f0fa;
+    }
+
+    /* SUBMIT */
+    .submit-area {
+      margin-top: 30px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .submit-btn {
+      border: none;
+      padding: 14px 30px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #0c9bd0, #087db5);
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(8, 125, 181, 0.25);
+      transition: 0.25s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(8, 125, 181, 0.3);
+    }
+
+    /* SUCCESS MESSAGE */
+    .success {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #e6f8ee;
+      color: #278151;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* MOBILE */
+    @media (max-width: 650px) {
+
+      .header {
+        padding: 0 20px;
+      }
+
+      .container {
+        margin-top: 25px;
+      }
+
+      .form-card {
+        padding: 20px;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .location-box {
+        flex-direction: column;
+      }
+
+      .location-btn {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+
+    <div class="logo">
+      <div class="logo-icon">💧</div>
+      AquaGuard
+    </div>
+
+    <button class="back-btn" onclick="goBack()">
+      ← Back to Dashboard
+    </button>
+
+  </header>
+
+
+  <!-- MAIN -->
+  <main class="container">
+
+    <div class="page-title">
+      <h1>Report a Water Issue</h1>
+      <p>Help your community by reporting a water-related problem.</p>
+    </div>
+
+
+    <div class="form-card">
+
+      <div class="section-title">
+        📸 Add a Photo
+      </div>
+
+
+      <!-- PHOTO UPLOAD -->
+      <label
+        for="photoInput"
+        class="upload-box"
+        id="uploadBox"
+      >
+
+        <img
+          id="preview"
+          alt="Uploaded water issue"
+        >
+
+        <div id="uploadContent">
+
+          <div class="upload-icon">
+            📷
+          </div>
+
+          <div class="upload-title">
+            Click to upload a photo
+          </div>
+
+          <div class="upload-subtitle">
+            Upload a clear photo of the water issue
+          </div>
+
+        </div>
+
+      </label>
+
+      <input
+        type="file"
+        id="photoInput"
+        accept="image/*"
+      >
+
+
+      <!-- ISSUE TYPE -->
+      <div class="form-group">
+
+        <label for="issueType">
+          Issue Type
+        </label>
+
+        <select id="issueType">
+
+          <option value="">
+            Select an issue
+          </option>
+
+          <option value="leakage">
+            🚰 Water Leakage
+          </option>
+
+          <option value="availability">
+            💧 Low Water Availability
+          </option>
+
+          <option value="groundwater">
+            🌱 Groundwater Observation
+          </option>
+
+          <option value="other">
+            ⚠️ Other Water Issue
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- LOCATION -->
+      <div class="form-group">
+
+        <label for="location">
+          📍 Location
+        </label>
+
+        <div class="location-box">
+
+          <input
+            type="text"
+            id="location"
+            placeholder="Enter area or location"
+          >
+
+          <button
+            type="button"
+            class="location-btn"
+            onclick="getLocation()"
+          >
+            Use My Location
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- SEVERITY + DATE -->
+      <div class="row">
+
+        <div class="form-group">
+
+          <label for="severity">
+            ⚠️ Severity
+          </label>
+
+          <select id="severity">
+
+            <option value="">
+              Select severity
+            </option>
+
+            <option value="low">
+              Low
+            </option>
+
+            <option value="medium">
+              Medium
+            </option>
+
+            <option value="high">
+              High
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="date">
+            📅 Date
+          </label>
+
+          <input
+            type="date"
+            id="date"
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- DESCRIPTION -->
+      <div class="form-group">
+
+        <label for="description">
+          📝 Describe the Issue
+        </label>
+
+        <textarea
+          id="description"
+          placeholder="Describe what you observed. Example: Continuous water leakage from a roadside pipeline..."
+        ></textarea>
+
+      </div>
+
+
+      <!-- SUBMIT -->
+      <div class="submit-area">
+
+        <button
+          class="submit-btn"
+          onclick="submitReport()"
+        >
+          Submit Report
+        </button>
+
+      </div>
+
+
+      <!-- SUCCESS -->
+      <div
+        class="success"
+        id="successMessage"
+      >
+        ✅ Report submitted successfully!
+        Redirecting to dashboard...
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <script>
+
+    /* ================= PHOTO PREVIEW ================= */
+
+    const photoInput =
+      document.getElementById("photoInput");
+
+    const preview =
+      document.getElementById("preview");
+
+    const uploadContent =
+      document.getElementById("uploadContent");
+
+
+    photoInput.addEventListener("change", function () {
+
+      const file = this.files[0];
+
+      if (file) {
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+
+          preview.src = event.target.result;
+
+          preview.style.display = "block";
+
+          uploadContent.style.display = "none";
+
+        };
+
+        reader.readAsDataURL(file);
+
+      }
+
+    });
+
+
+    /* ================= LOCATION ================= */
+
+    function getLocation() {
+
+      if (!navigator.geolocation) {
+
+        alert("Location is not supported by your browser.");
+
+        return;
+
+      }
+
+
+      navigator.geolocation.getCurrentPosition(
+
+        function (position) {
+
+          const latitude =
+            position.coords.latitude;
+
+          const longitude =
+            position.coords.longitude;
+
+
+          document.getElementById("location").value =
+            latitude.toFixed(6) +
+            ", " +
+            longitude.toFixed(6);
+
+        },
+
+
+        function () {
+
+          alert(
+            "Unable to get your location. Please enter the area manually."
+          );
+
+        }
+
+      );
+
+    }
+
+
+    /* ================= SUBMIT REPORT ================= */
+
+    function submitReport() {
+
+      const issueType =
+        document.getElementById("issueType").value;
+
+      const location =
+        document.getElementById("location").value.trim();
+
+      const severity =
+        document.getElementById("severity").value;
+
+      const date =
+        document.getElementById("date").value;
+
+      const description =
+        document.getElementById("description").value.trim();
+
+      const photo =
+        photoInput.files[0];
+
+
+      /* VALIDATION */
+
+      if (!photo) {
+
+        alert("Please upload a photo of the issue.");
+
+        return;
+
+      }
+
+
+      if (!issueType) {
+
+        alert("Please select the issue type.");
+
+        return;
+
+      }
+
+
+      if (!location) {
+
+        alert("Please enter the location.");
+
+        return;
+
+      }
+
+
+      if (!severity) {
+
+        alert("Please select the severity.");
+
+        return;
+
+      }
+
+
+      if (!description) {
+
+        alert("Please describe the issue.");
+
+        return;
+
+      }
+
+
+      /* READ PHOTO */
+
+      const reader = new FileReader();
+
+
+      reader.onload = function () {
+
+        const report = {
+
+          id: Date.now(),
+
+          issueType: issueType,
+
+          location: location,
+
+          severity: severity,
+
+          date: date ||
+            new Date().toISOString().split("T")[0],
+
+          description: description,
+
+          photo: reader.result,
+
+          status: "Reported"
+
+        };
+
+
+        /* GET OLD REPORTS */
+
+        let reports =
+          JSON.parse(
+            localStorage.getItem("aquaGuardReports")
+          ) || [];
+
+
+        /* ADD NEW REPORT */
+
+        reports.unshift(report);
+
+
+        /* SAVE */
+
+        localStorage.setItem(
+          "aquaGuardReports",
+          JSON.stringify(reports)
+        );
+
+
+        /* SUCCESS MESSAGE */
+
+        document.getElementById(
+          "successMessage"
+        ).style.display = "block";
+
+
+        /* DISABLE BUTTON */
+
+        const submitButton =
+          document.querySelector(".submit-btn");
+
+        submitButton.disabled = true;
+
+        submitButton.style.opacity = "0.7";
+
+        submitButton.innerText =
+          "Report Submitted ✓";
+
+
+        /* GO TO DASHBOARD */
+
+        setTimeout(function () {
+
+          window.location.href =
+            "dashboard.html";
+
+        }, 1200);
+
+      };
+
+
+      /* CONVERT PHOTO TO DATA */
+
+      reader.readAsDataURL(photo);
+
+    }
+
+
+    /* ================= BACK ================= */
+
+    function goBack() {
+
+      window.location.href =
+        "dashboard.html";
+
+    }
+
+  </script>
+
+</body>
+</html>
